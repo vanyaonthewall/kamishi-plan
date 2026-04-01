@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Камыши — план работ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Martian+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg:      #f7f4f0;
+    --bg2:     #eeebe5;
+    --bg3:     #e6e1d8;
+    --rule:    #d2cdc4;
+    --stone:   #b8b2a8;
+    --ink:     #1e1c19;
+    --ink-mid: #3a3830;
+    --ink-dim: #78746e;
+    --gold:    #7a5c2e;
+    --ember:   #6e3520;
+    --moss:    #3d5230;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Martian Mono', monospace;
+    font-size: 12px;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.018'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 80px;
+    position: relative;
+    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
+  }
+
+  .hero-reeds {
+    position: absolute;
+    right: 0; bottom: 0;
+    width: 52%; height: 100%;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .hero-label {
+    font-size: 10px; font-weight: 300;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 36px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s;
+    position: relative; z-index: 1;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 8vw, 108px);
+    font-weight: 300; line-height: 0.93; letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 52px;
+    opacity: 0; animation: fadeUp 0.9s ease forwards 0.4s;
+    position: relative; z-index: 1;
+  }
+
+  .hero-title em { font-style: italic; color: var(--stone); }
+
+  .hero-meta {
+    display: grid; grid-template-columns: repeat(3, auto);
+    max-width: 520px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.65s;
+    position: relative; z-index: 1;
+  }
+
+  .hero-meta-item {
+    padding: 18px 28px;
+    border: 1px solid var(--rule);
+  }
+  .hero-meta-item + .hero-meta-item { border-left: none; }
+
+  .meta-label {
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink-dim); margin-bottom: 5px;
+  }
+  .meta-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 400; color: var(--ink);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SECTIONS ─── */
+  .section { padding: 80px; border-bottom: 1px solid var(--rule); }
+
+  .section-header {
+    display: flex; align-items: baseline; gap: 20px; margin-bottom: 52px;
+  }
+  .section-num { font-size: 10px; letter-spacing: 0.2em; color: var(--stone); font-weight: 300; }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px; font-weight: 300; color: var(--ink);
+  }
+
+  /* ─── SCOPE ─── */
+  .scope-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--rule);
+  }
+
+  .scope-item {
+    background: var(--bg); padding: 28px;
+    transition: background 0.25s;
+  }
+  .scope-item:hover { background: var(--bg2); }
+
+  .scope-badge {
+    display: inline-block;
+    font-size: 8.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 3px 8px; margin-bottom: 14px;
+    border: 1px solid var(--rule); color: var(--ink-dim);
+  }
+  .scope-badge.maybe { border-color: rgba(110,53,32,0.3); color: var(--ember); }
+
+  .scope-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 8px;
+  }
+  .scope-desc { font-size: 11px; color: var(--ink-dim); line-height: 1.65; }
+
+  /* ─── TECH ─── */
+  .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+
+  .tech-card {
+    padding: 32px; border: 1px solid var(--rule);
+    background: var(--bg); position: relative; overflow: hidden;
+  }
+  .tech-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 2px; height: 100%; background: var(--ink);
+  }
+  .tech-card.alt::before { background: var(--gold); }
+
+  .tech-tag {
+    display: inline-block; font-size: 9px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-dim); margin-bottom: 14px;
+  }
+  .tech-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 400; color: var(--ink); margin-bottom: 10px;
+  }
+  .tech-desc { font-size: 11.5px; color: var(--ink-dim); line-height: 1.7; margin-bottom: 18px; }
+
+  .tech-points { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .tech-points li {
+    font-size: 11px; color: var(--ink-mid);
+    display: flex; gap: 10px; align-items: baseline;
+  }
+  .tech-points li::before { content: '—'; color: var(--rule); flex-shrink: 0; }
+
+  .cms-note {
+    margin-top: 32px; padding: 26px 30px;
+    border: 1px solid var(--rule); background: var(--bg2);
+  }
+  .cms-note-label {
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px;
+  }
+  .cms-note p { font-size: 11.5px; color: var(--ink-mid); line-height: 1.7; }
+
+  /* ─── GANTT ─── */
+  .gantt-wrap { overflow-x: auto; padding-bottom: 8px; }
+  .gantt { min-width: 900px; }
+
+  .gantt-month-row {
+    display: grid; grid-template-columns: 230px 1fr 1fr 1fr; margin-bottom: 2px;
+  }
+  .gantt-month-cell {
+    text-align: center; font-size: 9px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-mid);
+    padding: 6px; border-bottom: 1px solid var(--rule);
+  }
+
+  .gantt-weeks-row {
+    display: grid; grid-template-columns: 230px repeat(12, 1fr); margin-bottom: 14px;
+  }
+  .gantt-week {
+    font-size: 9px; letter-spacing: 0.06em; color: var(--stone);
+    text-align: center; padding: 5px 2px;
+  }
+
+  .gantt-group-label {
+    font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); padding: 14px 0 8px;
+    border-top: 1px solid var(--rule); margin-top: 4px;
+  }
+
+  .gantt-row {
+    display: grid; grid-template-columns: 230px 1fr;
+    margin-bottom: 4px; align-items: center; min-height: 32px;
+  }
+  .gantt-row:hover .gantt-label { color: var(--ink); }
+
+  .gantt-label {
+    font-size: 10.5px; color: var(--ink-dim);
+    padding-right: 14px; transition: color 0.2s; line-height: 1.3;
+  }
+
+  .gantt-track { position: relative; height: 26px; }
+
+  .bar {
+    position: absolute; top: 0; height: 100%;
+    display: flex; align-items: center;
+    padding: 0 9px; font-size: 9px; letter-spacing: 0.04em;
+    white-space: nowrap; overflow: hidden; border-radius: 1px;
+  }
+
+  .b-disc   { background: rgba(122,92,46,0.13); color: var(--gold); }
+  .b-design { background: rgba(30,28,25,0.07);  color: var(--ink-mid); }
+  .b-dev    { background: rgba(30,28,25,0.05);  color: var(--ink-dim); border: 1px solid var(--rule); }
+  .b-int    { background: rgba(110,53,32,0.1);  color: var(--ember); }
+  .b-test   { background: rgba(61,82,48,0.11);  color: var(--moss); }
+  .b-launch { background: rgba(122,92,46,0.2);  color: var(--gold); }
+  .b-client { background: rgba(30,28,25,0.04);  color: var(--stone); border: 1px dashed var(--rule); }
+  .b-sync   { background: rgba(30,28,25,0.06); color: var(--ink-dim); border: 1px solid var(--rule); font-size: 8px; justify-content: center; padding: 0 2px; }
+
+  /* positions (out of 12 cols) */
+  .w1  { width: calc(8.33%  - 2px); }
+  .w2  { width: calc(16.66% - 2px); }
+  .w3  { width: calc(25%    - 2px); }
+  .w4  { width: calc(33.33% - 2px); }
+
+  .s1  { left: 0%; }      .s2  { left: 8.33%; }
+  .s3  { left: 16.66%; }  .s4  { left: 25%; }
+  .s5  { left: 33.33%; }  .s6  { left: 41.66%; }
+  .s7  { left: 50%; }     .s8  { left: 58.33%; }
+  .s9  { left: 66.66%; }  .s10 { left: 75%; }
+  .s11 { left: 83.33%; }
+
+  /* ─── MONTH DETAIL ─── */
+  .months-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--rule);
+  }
+
+  .month-block { background: var(--bg); padding: 32px; }
+
+  .month-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px; font-weight: 300; color: var(--rule); line-height: 1; margin-bottom: 4px;
+  }
+  .month-name {
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 22px;
+  }
+
+  .task-list { list-style: none; }
+
+  .task-item {
+    padding: 9px 0; border-bottom: 1px solid var(--bg3);
+    display: flex; gap: 10px; align-items: baseline;
+  }
+  .task-item:last-child { border-bottom: none; }
+
+  .tw { font-size: 9px; letter-spacing: 0.06em; color: var(--stone); flex-shrink: 0; width: 38px; }
+  .tt { font-size: 11px; color: var(--ink-mid); line-height: 1.45; flex: 1; }
+
+  .ttag {
+    flex-shrink: 0; font-size: 8px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 2px 6px;
+  }
+  .tr { background: rgba(122,92,46,0.1);  color: var(--gold); }
+  .td { background: rgba(30,28,25,0.06);  color: var(--ink-mid); }
+  .ti { background: rgba(110,53,32,0.09); color: var(--ember); }
+  .tk { background: rgba(61,82,48,0.1);   color: var(--moss); }
+  .tc { background: rgba(30,28,25,0.04);  color: var(--stone); border: 1px dashed var(--rule); }
+
+  /* ─── DELIVERABLES ─── */
+  .deliv-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--rule);
+  }
+
+  .deliv-item {
+    background: var(--bg); padding: 22px; transition: background 0.2s;
+  }
+  .deliv-item:hover { background: var(--bg2); }
+
+  .deliv-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 300; color: var(--rule);
+    margin-bottom: 7px; line-height: 1;
+  }
+  .deliv-name { font-size: 11px; color: var(--ink-mid); line-height: 1.55; }
+
+  .deliv-maybe {
+    display: inline-block; margin-top: 8px;
+    font-size: 8.5px; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 2px 7px;
+    background: rgba(110,53,32,0.08); color: var(--ember);
+  }
+
+  /* ─── HYPOTHESES ─── */
+  .hyp-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; background: var(--rule);
+  }
+
+  .hyp-item {
+    background: var(--bg); padding: 28px 28px 28px 24px;
+    display: flex; gap: 20px;
+    transition: background 0.2s;
+  }
+  .hyp-item:hover { background: var(--bg2); }
+
+  .hyp-icon {
+    font-size: 16px; color: var(--rule); flex-shrink: 0;
+    margin-top: 2px; font-family: 'Cormorant Garamond', serif;
+  }
+
+  .hyp-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 400; color: var(--ink);
+    margin-bottom: 8px; line-height: 1.2;
+  }
+
+  .hyp-text {
+    font-size: 11px; color: var(--ink-dim); line-height: 1.7;
+  }
+
+  /* ─── PRICE ─── */
+  .price-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--rule); align-items: stretch;
+  }
+
+  .price-main, .price-total {
+    background: var(--bg); padding: 36px 40px;
+  }
+
+  .price-info {
+    background: var(--bg); padding: 32px 36px;
+    display: flex; flex-direction: column; gap: 0;
+    grid-column: 1 / -1;
+  }
+
+  .price-main { border-right: none; }
+
+  .price-label {
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink-dim); margin-bottom: 10px;
+  }
+
+  .price-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 6vw, 48px); font-weight: 300; color: var(--ink);
+    line-height: 1; margin-bottom: 6px;
+  }
+
+  .price-total .price-value { color: var(--gold); }
+
+  .price-sub {
+    font-size: 10px; color: var(--stone);
+  }
+
+  .price-info-item {
+    padding: 12px 0; border-bottom: 1px solid var(--bg3);
+    display: flex; gap: 20px;
+  }
+  .price-info-item:last-child { border-bottom: none; }
+
+  .pi-label {
+    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--stone); flex-shrink: 0; width: 90px; padding-top: 2px;
+  }
+
+  .pi-val { font-size: 11px; color: var(--ink-mid); line-height: 1.55; }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    padding: 44px 80px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; color: var(--ink-dim); font-style: italic;
+  }
+  .footer-date { font-size: 10px; letter-spacing: 0.15em; color: var(--stone); }
+
+  /* scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(14px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .hero, .section, .footer { padding: 44px 28px; }
+    .scope-grid, .months-grid { grid-template-columns: 1fr; }
+    .tech-grid { grid-template-columns: 1fr; }
+    .deliv-grid { grid-template-columns: repeat(2, 1fr); }
+    .hyp-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 52px; }
+    .price-grid { grid-template-columns: 1fr; }
+    .price-main, .price-total { padding: 28px; }
+    .price-info { padding: 24px 28px; grid-column: 1; }
+    .footer { flex-direction: column; gap: 8px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+
+  <svg class="hero-reeds" viewBox="0 0 600 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMax meet">
+    <line x1="470" y1="900" x2="452" y2="110" stroke="#1e1c19" stroke-width="2.8"/>
+    <line x1="515" y1="900" x2="506" y2="170" stroke="#1e1c19" stroke-width="2.2"/>
+    <line x1="435" y1="900" x2="426" y2="195" stroke="#1e1c19" stroke-width="2"/>
+    <line x1="558" y1="900" x2="552" y2="240" stroke="#1e1c19" stroke-width="1.6"/>
+    <line x1="396" y1="900" x2="388" y2="290" stroke="#1e1c19" stroke-width="1.5"/>
+    <line x1="348" y1="900" x2="342" y2="370" stroke="#1e1c19" stroke-width="1.4"/>
+    <line x1="582" y1="900" x2="578" y2="310" stroke="#1e1c19" stroke-width="1.2"/>
+    <line x1="305" y1="900" x2="312" y2="410" stroke="#1e1c19" stroke-width="1.2"/>
+    <line x1="492" y1="900" x2="538" y2="140" stroke="#1e1c19" stroke-width="1"/>
+    <line x1="265" y1="900" x2="270" y2="480" stroke="#1e1c19" stroke-width="1"/>
+    <!-- cattail heads -->
+    <ellipse cx="452" cy="132" rx="6.5" ry="24" fill="#1e1c19" opacity="0.55"/>
+    <ellipse cx="506" cy="192" rx="5.5" ry="20" fill="#1e1c19" opacity="0.48"/>
+    <ellipse cx="426" cy="217" rx="5.5" ry="19" fill="#1e1c19" opacity="0.45"/>
+    <ellipse cx="552" cy="262" rx="4.5" ry="15" fill="#1e1c19" opacity="0.38"/>
+    <ellipse cx="388" cy="310" rx="4" ry="14" fill="#1e1c19" opacity="0.36"/>
+    <ellipse cx="342" cy="390" rx="4" ry="13" fill="#1e1c19" opacity="0.32"/>
+    <ellipse cx="578" cy="330" rx="3.5" ry="12" fill="#1e1c19" opacity="0.28"/>
+    <ellipse cx="538" cy="162" rx="4.5" ry="16" fill="#1e1c19" opacity="0.32"/>
+    <ellipse cx="312" cy="430" rx="3.5" ry="12" fill="#1e1c19" opacity="0.28"/>
+    <ellipse cx="270" cy="500" rx="3" ry="10" fill="#1e1c19" opacity="0.24"/>
+    <!-- leaf blades -->
+    <path d="M452 320 Q474 200 498 110" stroke="#1e1c19" stroke-width="0.9" fill="none" opacity="0.2"/>
+    <path d="M426 420 Q448 310 438 195" stroke="#1e1c19" stroke-width="0.9" fill="none" opacity="0.18"/>
+    <path d="M506 390 Q528 275 515 170" stroke="#1e1c19" stroke-width="0.9" fill="none" opacity="0.17"/>
+    <path d="M348 560 Q368 450 358 370" stroke="#1e1c19" stroke-width="0.7" fill="none" opacity="0.15"/>
+    <path d="M305 620 Q325 520 318 410" stroke="#1e1c19" stroke-width="0.7" fill="none" opacity="0.14"/>
+    <!-- horizon -->
+    <line x1="0" y1="780" x2="600" y2="780" stroke="#1e1c19" stroke-width="0.5" opacity="0.1"/>
+  </svg>
+
+  <div class="hero-label">Камыши · Коммерческое предложение · 2026</div>
+  <h1 class="hero-title">Сайт<br><em>банного</em><br>пространства</h1>
+
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="meta-label">Срок</div>
+      <div class="meta-value">3 месяца</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="meta-label">Недель</div>
+      <div class="meta-value">12</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="meta-label">Этапов</div>
+      <div class="meta-value">3</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ ЧТО ДЕЛАЕМ ══ -->
+<section class="section reveal">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Что делаем</h2>
+  </div>
+
+  <div class="scope-grid">
+    <div class="scope-item">
+      <div class="scope-badge">Лендинг · B2C</div>
+      <div class="scope-name">Основной сайт</div>
+      <div class="scope-desc">Единый лендинг с блоками: процедуры, события, аренда, сертификаты, тини-хаусы. Блоки переставляются и редактируются через CMS без разработчика.</div>
+    </div>
+    <div class="scope-item">
+      <div class="scope-badge">Лендинг · B2B</div>
+      <div class="scope-name">Бизнес-направление</div>
+      <div class="scope-desc">Отдельное поле для корпоративных клиентов и партнёров: аренда всего пространства, франшиза, корпоративы. Своя визуальная тема.</div>
+    </div>
+    <div class="scope-item">
+      <div class="scope-badge">Сервис</div>
+      <div class="scope-name">Подборщик процедур</div>
+      <div class="scope-desc">Интерактивный сервис вовлечения: рандомная карточка процедуры + квиз для персонального подбора. Вовлечение → конверсия в запись.</div>
+    </div>
+
+    <div class="scope-item">
+      <div class="scope-badge">Инфраструктура</div>
+      <div class="scope-name">CMS для контента</div>
+      <div class="scope-desc">Self-hosted CMS (Payload / Strapi или другая): менеджер сайта редактирует любой блок, добавляет процедуры и события, управляет медиа — без разработчика.</div>
+    </div>
+    <div class="scope-item">
+      <div class="scope-badge maybe">Возможно</div>
+      <div class="scope-name">API-интеграция</div>
+      <div class="scope-desc">Потенциальная связь с операционной системой бронирований — расписание, слоты, доступность. Зависит от API операционки. Оцениваем в процессе.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ ТЕХНОЛОГИИ ══ -->
+<section class="section reveal">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Технологии</h2>
+  </div>
+
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tech-tag">Фронтенд + хостинг</div>
+      <div class="tech-name">Next.js + Vercel</div>
+      <div class="tech-desc">Современный React-фреймворк. Vercel даёт деплой в один клик и preview-ссылки для каждой версии — удобно согласовывать и тестировать с реальными пользователями. После тестов — перенос на хостинг вне РФ.</div>
+      <ul class="tech-points">
+        <li>Preview URL на каждый деплой — для тестирования и приёмки</li>
+        <li>SEO из коробки — серверный рендеринг страниц</li>
+        <li>Vercel Analytics — базовая аналитика бесплатно</li>
+        <li>Перенос на внешний хостинг перед релизом</li>
+      </ul>
+    </div>
+
+    <div class="tech-card alt">
+      <div class="tech-tag">CMS для сайта</div>
+      <div class="tech-name">Payload / Strapi</div>
+      <div class="tech-desc">Self-hosted CMS — выбор конкретной системы зависит от требований проекта. Оба варианта нативно работают с Next.js, хранят данные на вашем сервере и не требуют внешних SaaS-подписок.</div>
+      <ul class="tech-points">
+        <li>Self-hosted — данные не у третьих лиц</li>
+        <li>Совместимость с Next.js — один деплой</li>
+        <li>Гибкие схемы: блоки, карточки, медиа</li>
+        <li>CMS можно заменить позже без переписки сайта</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cms-note">
+    <div class="cms-note-label">Две системы — две зоны ответственности</div>
+    <p>Контент сайта (тексты, процедуры, блоки страниц) — в CMS, управляет менеджер сайта. Операционная система (записи, клиенты, бронирования) — разрабатывается отдельно. Они не смешиваются. Возможная API-интеграция между ними — отдельный этап, оцениваем по ходу работы.</p>
+  </div>
+</section>
+
+
+<!-- ══ ТАЙМЛАЙН ══ -->
+<section class="section reveal">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Таймлайн</h2>
+  </div>
+
+  <div class="gantt-wrap">
+    <div class="gantt">
+
+      <div class="gantt-month-row">
+        <div></div>
+        <div class="gantt-month-cell">Месяц 1</div>
+        <div class="gantt-month-cell">Месяц 2</div>
+        <div class="gantt-month-cell">Месяц 3</div>
+      </div>
+
+      <div class="gantt-weeks-row">
+        <div></div>
+        <div class="gantt-week">НД 1</div><div class="gantt-week">НД 2</div>
+        <div class="gantt-week">НД 3</div><div class="gantt-week">НД 4</div>
+        <div class="gantt-week">НД 5</div><div class="gantt-week">НД 6</div>
+        <div class="gantt-week">НД 7</div><div class="gantt-week">НД 8</div>
+        <div class="gantt-week">НД 9</div><div class="gantt-week">НД 10</div>
+        <div class="gantt-week">НД 11</div><div class="gantt-week">НД 12</div>
+      </div>
+
+      <div class="gantt-group-label">Discovery</div>
+
+      <div class="gantt-row">
+        <div class="gantt-label">Бриф клиента</div>
+        <div class="gantt-track"><div class="bar b-disc s1 w1">Бриф</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Передача материалов, брендинг</div>
+        <div class="gantt-track"><div class="bar b-client s1 w2">Материалы</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">UI/UX референсы</div>
+        <div class="gantt-track"><div class="bar b-disc s1 w2">Референсы</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Аудит текущего сайта + логика</div>
+        <div class="gantt-track"><div class="bar b-disc s1 w2">Аудит</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">CJM + Jobs To Be Done</div>
+        <div class="gantt-track"><div class="bar b-disc s2 w2">CJM / JTBD</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Конкурентный анализ</div>
+        <div class="gantt-track"><div class="bar b-disc s1 w2">Конкуренты</div></div>
+      </div>
+
+      <div class="gantt-group-label">Дизайн · Figma</div>
+
+      <div class="gantt-row">
+        <div class="gantt-label">Карта сайта и структура</div>
+        <div class="gantt-track"><div class="bar b-design s3 w1">IA</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Утверждение визуального направления</div>
+        <div class="gantt-track"><div class="bar b-design s3 w1">Визуал</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Wireframes в Figma</div>
+        <div class="gantt-track"><div class="bar b-design s3 w2">Wireframes</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Дизайн ключевых страниц в Figma</div>
+        <div class="gantt-track"><div class="bar b-design s4 w2">Дизайн</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Дизайн-система (компоненты, токены)</div>
+        <div class="gantt-track"><div class="bar b-design s5 w4">Дизайн-система</div></div>
+      </div>
+
+      <div class="gantt-group-label">Разработка · AI-агенты + Cursor</div>
+
+      <div class="gantt-row">
+        <div class="gantt-label">Верстка — AI-агенты по дизайну</div>
+        <div class="gantt-track"><div class="bar b-dev s5 w4">Верстка</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Подключение CMS (Payload / Strapi)</div>
+        <div class="gantt-track"><div class="bar b-dev s5 w4">CMS</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Подборщик процедур</div>
+        <div class="gantt-track"><div class="bar b-int s1 w2">Подборщик</div></div>
+      </div>
+
+      <div class="gantt-group-label">Тест и запуск</div>
+
+      <div class="gantt-row">
+        <div class="gantt-label">Vercel preview → юзабилити-тест</div>
+        <div class="gantt-track"><div class="bar b-test s9 w2">Тест</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Мобильная адаптация</div>
+        <div class="gantt-track"><div class="bar b-test s9 w2">Мобайл</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Правки по фидбеку</div>
+        <div class="gantt-track"><div class="bar b-test s10 w2">Правки</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">SEO-базис</div>
+        <div class="gantt-track"><div class="bar b-launch s11 w1">SEO</div></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Онбординг клиента + релиз</div>
+        <div class="gantt-track"><div class="bar b-launch s11 w2">Запуск</div></div>
+      </div>
+
+      <div class="gantt-group-label">Еженедельно · весь проект</div>
+
+      <div class="gantt-row">
+        <div class="gantt-label">Созвон — отчёт + демо сделанного</div>
+        <div class="gantt-track">
+          <div class="bar b-sync s1 w1" style="left:0%">НД 1</div>
+          <div class="bar b-sync s1 w1" style="left:8.33%">НД 2</div>
+          <div class="bar b-sync s1 w1" style="left:16.66%">НД 3</div>
+          <div class="bar b-sync s1 w1" style="left:25%">НД 4</div>
+          <div class="bar b-sync s1 w1" style="left:33.33%">НД 5</div>
+          <div class="bar b-sync s1 w1" style="left:41.66%">НД 6</div>
+          <div class="bar b-sync s1 w1" style="left:50%">НД 7</div>
+          <div class="bar b-sync s1 w1" style="left:58.33%">НД 8</div>
+          <div class="bar b-sync s1 w1" style="left:66.66%">НД 9</div>
+          <div class="bar b-sync s1 w1" style="left:75%">НД 10</div>
+          <div class="bar b-sync s1 w1" style="left:83.33%">НД 11</div>
+          <div class="bar b-sync s1 w1" style="left:91.66%">НД 12</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ ПО ЭТАПАМ ══ -->
+<section class="section reveal">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">По этапам</h2>
+  </div>
+
+  <div class="months-grid">
+    <div class="month-block">
+      <div class="month-num">01</div>
+      <div class="month-name">Discovery + Подборщик</div>
+      <ul class="task-list">
+        <li class="task-item">
+          <span class="tw">НД 1</span>
+          <span class="tt">Бриф клиента. Передача брендинга и исходных материалов</span>
+          <span class="ttag tc">Клиент</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 1–2</span>
+          <span class="tt">UI/UX референсы, аудит сайта, конкурентный анализ</span>
+          <span class="ttag tr">Research</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 2</span>
+          <span class="tt">CJM + Jobs To Be Done — воронки, ценностные категории, сценарии</span>
+          <span class="ttag tr">Research</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 1–2</span>
+          <span class="tt">Подборщик процедур — рандом-карточка + квиз-сценарий</span>
+          <span class="ttag ti">Dev</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 3</span>
+          <span class="tt">Карта сайта. Wireframes в Figma</span>
+          <span class="ttag td">Figma</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 3–4</span>
+          <span class="tt">Утверждение визуального направления. Дизайн ключевых страниц в Figma</span>
+          <span class="ttag td">Figma</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">Еженед.</span>
+          <span class="tt">Созвон с клиентом — отчёт и демо сделанного</span>
+          <span class="ttag tc">Синк</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="month-block">
+      <div class="month-num">02</div>
+      <div class="month-name">Дизайн-система + Разработка</div>
+      <ul class="task-list">
+        <li class="task-item">
+          <span class="tw">НД 5–8</span>
+          <span class="tt">Дизайн-система в Figma — компоненты, токены, corner-кейсы</span>
+          <span class="ttag td">Figma</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 5–8</span>
+          <span class="tt">Верстка B2C и B2B лендингов — AI-агенты по дизайну из Figma</span>
+          <span class="ttag ti">Dev</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 5–8</span>
+          <span class="tt">Подключение CMS (Payload / Strapi) — все блоки редактируемы</span>
+          <span class="ttag ti">Dev</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">Еженед.</span>
+          <span class="tt">Созвон с клиентом — отчёт и демо сделанного</span>
+          <span class="ttag tc">Синк</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="month-block">
+      <div class="month-num">03</div>
+      <div class="month-name">Тест + Запуск</div>
+      <ul class="task-list">
+        <li class="task-item">
+          <span class="tw">НД 9–10</span>
+          <span class="tt">Vercel preview → юзабилити-тест (5–7 чел.), сбор фидбека</span>
+          <span class="ttag tk">Тест</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 9–10</span>
+          <span class="tt">Мобильная адаптация всех страниц</span>
+          <span class="ttag tk">Тест</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 10–11</span>
+          <span class="tt">Правки по итогам тестирования</span>
+          <span class="ttag tk">Тест</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 11</span>
+          <span class="tt">SEO-базис: мета, OG, sitemap</span>
+          <span class="ttag td">Dev</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">НД 12</span>
+          <span class="tt">Онбординг клиента. Перенос на хостинг вне РФ. Релиз</span>
+          <span class="ttag tc">Запуск</span>
+        </li>
+        <li class="task-item">
+          <span class="tw">Еженед.</span>
+          <span class="tt">Созвон с клиентом — отчёт и демо сделанного</span>
+          <span class="ttag tc">Синк</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ DELIVERABLES ══ -->
+<section class="section reveal">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Что получает клиент</h2>
+  </div>
+
+  <div class="deliv-grid">
+    <div class="deliv-item">
+      <div class="deliv-num">01</div>
+      <div class="deliv-name">B2C лендинг с воронками на процедуры, события, запись и соцсети</div>
+    </div>
+    <div class="deliv-item">
+      <div class="deliv-num">02</div>
+      <div class="deliv-name">B2B лендинг — аренда, корпоративы, франшиза, отдельная тема</div>
+    </div>
+    <div class="deliv-item">
+      <div class="deliv-num">03</div>
+      <div class="deliv-name">Подборщик процедур — интерактивный сервис вовлечения и конверсии</div>
+    </div>
+    <div class="deliv-item">
+      <div class="deliv-num">04</div>
+      <div class="deliv-name">Self-hosted CMS — редактирование любого блока без разработчика</div>
+    </div>
+    <div class="deliv-item">
+      <div class="deliv-num">05</div>
+      <div class="deliv-name">Протестированный продукт с валидацией на реальных пользователях</div>
+    </div>
+    <div class="deliv-item">
+      <div class="deliv-num">06</div>
+      <div class="deliv-name">Мобильная версия — все страницы адаптированы</div>
+    </div>
+    <div class="deliv-item">
+      <div class="deliv-num">07</div>
+      <div class="deliv-name">
+        API-интеграция с операционной системой бронирований
+        <div class="deliv-maybe">Возможно</div>
+      </div>
+    </div>
+    <div class="deliv-item">
+      <div class="deliv-num">08</div>
+      <div class="deliv-name">Онбординг команды: как управлять сайтом через CMS</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ ГИПОТЕЗЫ ══ -->
+<section class="section reveal">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Гипотезы</h2>
+  </div>
+
+  <div style="margin-bottom: 14px; font-size: 11px; color: var(--ink-dim); max-width: 560px; line-height: 1.7;">
+    Что изменится качественно — и почему мы в это верим
+  </div>
+
+  <div class="hyp-grid">
+
+    <div class="hyp-item">
+      <div class="hyp-icon">→</div>
+      <div class="hyp-body">
+        <div class="hyp-title">Воронка перестанет терять клиентов</div>
+        <div class="hyp-text">Сейчас из-за слабой иерархии контента и непонятной логики пользователь уходит, не найдя нужного. Проработка CJM и переосмысление структуры сделают путь от первого касания до записи коротким и очевидным.</div>
+      </div>
+    </div>
+
+    <div class="hyp-item">
+      <div class="hyp-icon">→</div>
+      <div class="hyp-body">
+        <div class="hyp-title">Подборщик процедур увеличит вовлечённость</div>
+        <div class="hyp-text">Интерактивный квиз и рандомная карточка — это не просто фича, а инструмент вовлечения. Человек, который поиграл с подборщиком, уже мысленно выбрал процедуру — до записи остаётся один шаг.</div>
+      </div>
+    </div>
+
+    <div class="hyp-item">
+      <div class="hyp-icon">→</div>
+      <div class="hyp-body">
+        <div class="hyp-title">Качественный продукт ощущается как качественный</div>
+        <div class="hyp-text">Когда сайт работает без сбоев, выглядит цельно и отзывается на каждое действие — это считывается интуитивно. Аккуратный, продуманный интерфейс напрямую транслирует уровень самого пространства.</div>
+      </div>
+    </div>
+
+    <div class="hyp-item">
+      <div class="hyp-icon">→</div>
+      <div class="hyp-body">
+        <div class="hyp-title">Подборщик — быстрый результат для доверия</div>
+        <div class="hyp-text">Готовый подборщик процедур в первый месяц — это не просто фича, это демонстрация подхода. Клиент видит работающий продукт уже на старте и убеждается в качестве до того, как проект развернулся в полную силу.</div>
+      </div>
+    </div>
+
+    <div class="hyp-item">
+      <div class="hyp-icon">→</div>
+      <div class="hyp-body">
+        <div class="hyp-title">Отдельный B2B лендинг откроет новый канал</div>
+        <div class="hyp-text">Корпоративный клиент ищет другое и принимает решение иначе. Отдельная страница с нужным языком и акцентами на аренду и форматы — это возможность работать с этим сегментом системно, а не случайно.</div>
+      </div>
+    </div>
+
+    <div class="hyp-item">
+      <div class="hyp-icon">→</div>
+      <div class="hyp-body">
+        <div class="hyp-title">CMS даст скорость реакции на рынок</div>
+        <div class="hyp-text">Менеджер обновляет акцию, добавляет событие или меняет блок за минуты — без разработчика. Сайт перестаёт быть "замороженным" и становится живым инструментом коммуникации.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══ СТОИМОСТЬ ══ -->
+<section class="section reveal">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">Стоимость</h2>
+  </div>
+
+  <div class="price-grid">
+    <div class="price-main">
+      <div class="price-label">За этап</div>
+      <div class="price-value">100 000 ₽</div>
+      <div class="price-sub">× 3 этапа = 300 000 ₽</div>
+    </div>
+    <div class="price-total">
+      <div class="price-label">Итого за проект</div>
+      <div class="price-value">300 000 ₽</div>
+      <div class="price-sub">Без скрытых платежей</div>
+    </div>
+    <div class="price-info">
+      <div class="price-info-item">
+        <div class="pi-label">Схема оплаты</div>
+        <div class="pi-val">50 000 ₽ предоплата в начале каждого этапа + 50 000 ₽ по итогам этапа после подписания акта</div>
+      </div>
+      <div class="price-info-item">
+        <div class="pi-label">Старт работ</div>
+        <div class="pi-val">Исполнитель приступает к каждому этапу после получения предоплаты</div>
+      </div>
+      <div class="price-info-item">
+        <div class="pi-label">Договор</div>
+        <div class="pi-val">Один договор оказания услуг на весь проект + акт выполненных работ по итогам каждого из 3 этапов</div>
+      </div>
+      <div class="price-info-item">
+        <div class="pi-label">Что не входит</div>
+        <div class="pi-val">Хостинг, домен, лицензии на сторонние сервисы, контент (тексты, фото)</div>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="footer reveal">
+  <div class="footer-brand">Камыши</div>
+  <div class="footer-date">Коммерческое предложение · 2026</div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.05 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
